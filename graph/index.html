@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step-by-Step Graph Algo Visualizer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="toolbar">
+       <h1>
+    Shortest Path<br>
+    <span style="font-size: 1.0rem; font-weight: bold; color: #006aff;">(Graph Visualization Step-by-Step)</span>
+</h1>
+        
+        <div class="btn-group">
+            <button id="mode-node" class="active" onclick="setMode('node')">Add Node</button>
+            <button id="mode-edge" onclick="setMode('edge')">Add Edge</button>
+            <button id="mode-move" onclick="setMode('move')">Move</button>
+        </div>
+
+        <div style="width: 1px; height: 24px; background: #e2e8f0; margin: 0 5px;"></div>
+        
+        <div class="btn-group">
+            <button id="btn-undo" onclick="undo()" disabled title="Undo">↩ Undo</button>
+            <button id="btn-redo" onclick="redo()" disabled title="Redo">↪ Redo</button>
+        </div>
+
+        <div id="weight-input-container" class="weight-input-group">
+            <label for="edge-weight">Weight:</label>
+            <input type="number" id="edge-weight" value="1">
+            <label for="edge-type" style="margin-left:8px;">Type:</label>
+            <select id="edge-type">
+                <option value="directed">Directed (→)</option>
+                <option value="undirected" selected>Undirected (—)</option>
+            </select>
+        </div>
+
+        <div style="flex: 1"></div>
+        
+        <button id="btn-run-algo" class="primary-action" onclick="prepareAlgorithm()">Run Algorithm</button>
+        <button id="btn-reset" onclick="resetGraph()">Reset Graph</button>
+    </div>
+
+    <div class="main-container">
+        <div class="canvas-container" id="canvas-container">
+            <div class="mode-indicator" id="mode-indicator">Mode: Add Node (Click empty space)</div>
+            <svg id="graph-svg">
+                <defs>
+                    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="29" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#94a3b8" />
+                    </marker>
+                    <marker id="arrowhead-highlight" markerWidth="10" markerHeight="7" refX="29" refY="3.5" orient="auto">
+                        <polygon points="0 0, 10 3.5, 0 7" fill="#f59e0b" />
+                    </marker>
+                </defs>
+                <g id="g-edges"></g>
+                <g id="g-nodes"></g>
+            </svg>
+        </div>
+
+        <div class="resizer-x" id="resizer-x"></div>
+
+        <div class="sidebar" id="sidebar">
+            <div class="panel-section">
+                <div class="panel-title">Controls</div>
+                <div class="playback-controls">
+                    <button id="btn-prev" onclick="step(-1)" disabled>◀ Prev</button>
+                    <button id="btn-play" onclick="togglePlay()" disabled>▶ Play</button>
+                    <button id="btn-next" onclick="step(1)" disabled>Next ▶</button>
+                </div>
+                <div style="text-align: center; font-size: 0.9rem; display: flex; justify-content: center; align-items: center; gap: 10px;">
+                    <span>Step <span id="step-count">0</span> / <span id="step-total">0</span></span>
+                </div>
+            </div>
+
+            <div class="panel-section" style="flex: 1; display: flex; flex-direction: column; min-height: 0;">
+                <div class="panel-title">Algorithm Log</div>
+                <div class="log-container" id="algo-log">
+                    <div style="color: #94a3b8; font-style: italic;">
+                        1. Add Nodes manually.<br>
+                        2. Click "Run Algorithm".<br>
+                        3. Click a Node to start.
+                    </div>
+                </div>
+            </div>
+
+            <div class="resizer-y" id="resizer-y"></div>
+
+            <div class="panel-section" id="table-panel" style="height: 30%;">
+                <div class="panel-title">Distance Table</div>
+                <div style="overflow-y: auto; height: 100%;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Node</th>
+                                <th>Distance</th>
+                                <th>Parent</th>
+                                <th>Path Taken</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dist-table-body">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="error-modal" class="error-modal-overlay">
+        <div class="error-modal">
+            <h2>Algorithm Error</h2>
+            <div id="error-reasons"></div>
+            <button onclick="document.getElementById('error-modal').style.display='none'">Okay, I'll fix it</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
